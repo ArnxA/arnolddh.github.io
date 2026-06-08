@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil Profesional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ─── CSS VARIABLES ─── */
+  :root {
+    --bg-deep:       #080c10;
+    --bg-mid:        #0e1420;
+    --bg-card:       #111928;
+    --accent-gold:   #c9a84c;
+    --accent-teal:   #2dd4bf;
+    --accent-rose:   #f472b6;
+    --text-primary:  #f0ece4;
+    --text-muted:    #7a8499;
+    --text-dim:      #3d4760;
+    --border:        rgba(201,168,76,0.18);
+    --border-soft:   rgba(255,255,255,0.06);
+    --glow-gold:     rgba(201,168,76,0.25);
+    --glow-teal:     rgba(45,212,191,0.15);
+    --radius-lg:     20px;
+    --radius-xl:     32px;
+    --transition:    cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ─── RESET & BASE ─── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ─── CUSTOM CURSOR ─── */
+  #cursor-dot {
+    width: 8px; height: 8px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, background 0.2s;
+  }
+  #cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s var(--transition), width 0.2s, height 0.2s, border-color 0.2s;
+  }
+  body:hover #cursor-ring { border-color: var(--accent-gold); }
+
+  /* ─── BACKGROUND NOISE TEXTURE ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* ─── ANIMATED GRID ─── */
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridDrift 30s linear infinite;
+  }
+  @keyframes gridDrift {
+    0%   { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+  }
+
+  /* ─── FLOATING ORBS ─── */
+  .orb {
+    position: fixed; border-radius: 50%;
+    pointer-events: none; z-index: 0; filter: blur(90px);
+  }
+  .orb-1 { width: 520px; height: 520px; top: -150px; right: -100px; background: radial-gradient(circle, rgba(201,168,76,0.12), transparent 70%); animation: orbFloat 18s ease-in-out infinite; }
+  .orb-2 { width: 400px; height: 400px; bottom: 20%; left: -120px; background: radial-gradient(circle, rgba(45,212,191,0.1), transparent 70%); animation: orbFloat 24s ease-in-out infinite reverse; }
+  .orb-3 { width: 300px; height: 300px; top: 50%; right: 10%; background: radial-gradient(circle, rgba(244,114,182,0.07), transparent 70%); animation: orbFloat 20s ease-in-out infinite 5s; }
+  @keyframes orbFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    33%  { transform: translateY(-40px) scale(1.05); }
+    66%  { transform: translateY(20px) scale(0.97); }
+  }
+
+  /* ─── MAIN LAYOUT ─── */
+  main { position: relative; z-index: 1; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 48px;
+    height: 70px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(8,12,16,0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border-soft);
+    transition: all 0.4s var(--transition);
+  }
+  nav.scrolled { background: rgba(8,12,16,0.95); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--accent-gold);
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem; font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    position: relative; padding-bottom: 4px;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent-gold);
+    transition: width 0.35s var(--transition);
+  }
+  .nav-links a:hover { color: var(--accent-gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ─── SECTIONS ─── */
+  section {
+    min-height: 100vh;
+    padding: 120px 80px 80px;
+    position: relative;
+  }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; color: var(--accent-teal);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0; transform: translateY(20px);
+    transition: all 0.6s var(--transition);
+  }
+  .section-label.visible { opacity: 1; transform: translateY(0); }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 300; line-height: 1.15;
+    color: var(--text-primary);
+    opacity: 0; transform: translateY(30px);
+    transition: all 0.7s var(--transition) 0.1s;
+  }
+  .section-title.visible { opacity: 1; transform: translateY(0); }
+  .section-title em { font-style: italic; color: var(--accent-gold); }
+
+  .divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, var(--accent-gold), transparent);
+    margin: 28px 0 48px;
+    opacity: 0; transform: scaleX(0); transform-origin: left;
+    transition: all 0.7s var(--transition) 0.2s;
+  }
+  .divider.visible { opacity: 1; transform: scaleX(1); }
+
+  /* ─── HERO SECTION ─── */
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 60px;
+    padding-top: 90px;
+  }
+  .hero-content { position: relative; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; color: var(--accent-teal);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0; animation: fadeSlideUp 0.8s var(--transition) 0.2s forwards;
+  }
+  .hero-eyebrow span { width: 30px; height: 1px; background: var(--accent-teal); }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 300; line-height: 1.05;
+    letter-spacing: -1px;
+    opacity: 0; animation: fadeSlideUp 0.9s var(--transition) 0.4s forwards;
+  }
+  .hero-name strong { font-weight: 700; display: block; }
+  .hero-name em { font-style: italic; color: var(--accent-gold); }
+  .hero-role {
+    font-size: 1.15rem; font-weight: 300;
+    color: var(--text-muted); letter-spacing: 0.5px;
+    margin-top: 16px; margin-bottom: 32px;
+    opacity: 0; animation: fadeSlideUp 0.9s var(--transition) 0.6s forwards;
+  }
+  .hero-description {
+    font-size: 1rem; line-height: 1.8;
+    color: var(--text-muted); max-width: 460px;
+    opacity: 0; animation: fadeSlideUp 0.9s var(--transition) 0.75s forwards;
+  }
+  .hero-cta {
+    display: flex; gap: 16px; margin-top: 40px;
+    opacity: 0; animation: fadeSlideUp 0.9s var(--transition) 0.9s forwards;
+  }
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--accent-gold); color: #080c10;
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; border-radius: 2px;
+    transition: all 0.3s; position: relative; overflow: hidden;
+    border: none; cursor: pointer;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255,255,255,0.2);
+    transform: translateX(-110%) skewX(-20deg);
+    transition: transform 0.4s;
+  }
+  .btn-primary:hover::before { transform: translateX(110%) skewX(-20deg); }
+  .btn-primary:hover { box-shadow: 0 8px 32px rgba(201,168,76,0.4); }
+  .btn-secondary {
+    padding: 14px 32px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; border-radius: 2px;
+    transition: all 0.3s; background: transparent; cursor: pointer;
+  }
+  .btn-secondary:hover { border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(201,168,76,0.05); }
+
+  /* ─── HERO PHOTO ─── */
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; animation: fadeSlideRight 1s var(--transition) 0.5s forwards;
+  }
+  .photo-frame {
+    position: relative; width: 380px; height: 420px;
+  }
+  .photo-border-outer {
+    position: absolute; inset: -12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    animation: rotateBorder 12s linear infinite;
+  }
+  @keyframes rotateBorder {
+    0%   { box-shadow: 4px 4px 0 var(--accent-gold), -4px -4px 0 transparent; }
+    50%  { box-shadow: -4px 4px 0 transparent, 4px -4px 0 var(--accent-teal); }
+    100% { box-shadow: 4px 4px 0 var(--accent-gold), -4px -4px 0 transparent; }
+  }
+  .photo-accent-line {
+    position: absolute; top: -24px; right: -24px;
+    width: 80px; height: 80px;
+    border-top: 2px solid var(--accent-gold);
+    border-right: 2px solid var(--accent-gold);
+    border-radius: 0 var(--radius-lg) 0 0;
+  }
+  .photo-accent-line-2 {
+    position: absolute; bottom: -24px; left: -24px;
+    width: 80px; height: 80px;
+    border-bottom: 2px solid var(--accent-teal);
+    border-left: 2px solid var(--accent-teal);
+    border-radius: 0 0 0 var(--radius-lg);
+  }
+  .photo-container {
+    width: 100%; height: 100%;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    position: relative;
+  }
+  .photo-container img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.6s var(--transition);
+  }
+  .photo-container:hover img { transform: scale(1.04); }
+  .photo-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px; color: var(--text-dim);
+  }
+  .photo-placeholder-icon { font-size: 4rem; opacity: 0.3; }
+  .photo-upload-btn {
+    padding: 10px 24px;
+    border: 1px dashed rgba(201,168,76,0.4);
+    background: transparent; color: var(--accent-gold);
+    font-size: 0.78rem; letter-spacing: 1px;
+    text-transform: uppercase; border-radius: 4px;
+    cursor: pointer; transition: all 0.3s;
+    font-family: 'Space Mono', monospace;
+  }
+  .photo-upload-btn:hover { background: rgba(201,168,76,0.08); border-color: var(--accent-gold); }
+  #photo-input { display: none; }
+  .photo-badge {
+    position: absolute; bottom: 20px; left: -20px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 20px;
+    backdrop-filter: blur(10px);
+    animation: badgeFloat 3s ease-in-out infinite;
+  }
+  @keyframes badgeFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .badge-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 700; color: var(--accent-gold);
+    line-height: 1;
+  }
+  .badge-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+  .photo-badge-2 {
+    position: absolute; top: 20px; right: -20px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 20px;
+    animation: badgeFloat 3s ease-in-out infinite 1.5s;
+  }
+
+  /* ─── STATS ─── */
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 40px;
+    opacity: 0; animation: fadeSlideUp 0.9s var(--transition) 1.05s forwards;
+  }
+  .stat-item { text-align: left; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; font-weight: 700;
+    color: var(--text-primary); line-height: 1;
+  }
+  .stat-num span { color: var(--accent-gold); }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* ─── ABOUT SECTION ─── */
+  #sobre { background: transparent; }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 80px; align-items: start;
+  }
+  .about-left { position: sticky; top: 100px; }
+  .about-photo-small {
+    width: 100%; aspect-ratio: 3/4;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .about-photo-small img { width: 100%; height: 100%; object-fit: cover; }
+  .about-photo-small::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,12,16,0.6), transparent 40%);
+  }
+  .about-photo-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-dim); font-size: 3rem; opacity: 0.3;
+  }
+  .contact-card {
+    background: var(--bg-card); border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg); padding: 24px;
+  }
+  .contact-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 0; border-bottom: 1px solid var(--border-soft);
+  }
+  .contact-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .contact-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(201,168,76,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+    color: var(--accent-gold);
+  }
+  .contact-detail { flex: 1; }
+  .contact-type { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .contact-value {
+    font-size: 0.88rem; color: var(--text-primary); margin-top: 2px;
+    font-family: 'Space Mono', monospace;
+  }
+  .contact-value[data-edit] {
+    outline: none; cursor: text;
+    border-bottom: 1px dashed transparent;
+    transition: border-color 0.2s;
+  }
+  .contact-value[data-edit]:focus {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+  }
+  .about-right {}
+  .about-text {
+    font-size: 1.05rem; line-height: 1.9;
+    color: var(--text-muted);
+    opacity: 0; transform: translateY(24px);
+    transition: all 0.7s var(--transition) 0.3s;
+  }
+  .about-text.visible { opacity: 1; transform: translateY(0); }
+  .about-text p { margin-bottom: 20px; }
+  .about-text strong { color: var(--text-primary); font-weight: 500; }
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(45,212,191,0.05));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 28px 32px;
+    margin: 32px 0;
+    position: relative; overflow: hidden;
+  }
+  .highlight-box::before {
+    content: '"'; position: absolute; top: -10px; left: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem; color: rgba(201,168,76,0.08); line-height: 1;
+    pointer-events: none;
+  }
+  .highlight-box p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-style: italic;
+    color: var(--text-primary); line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ─── SKILLS GRID ─── */
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-top: 40px;
+  }
+  .skill-chip {
+    background: var(--bg-card); border: 1px solid var(--border-soft);
+    border-radius: 12px; padding: 14px 18px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.85rem; color: var(--text-muted);
+    transition: all 0.3s;
+    opacity: 0; transform: scale(0.9);
+    transition: all 0.4s var(--transition);
+  }
+  .skill-chip.visible { opacity: 1; transform: scale(1); }
+  .skill-chip:hover {
+    border-color: var(--accent-gold);
+    color: var(--text-primary);
+    background: rgba(201,168,76,0.06);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .skill-chip-dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-gold { background: var(--accent-gold); }
+  .dot-teal { background: var(--accent-teal); }
+  .dot-rose { background: var(--accent-rose); }
+
+  /* ─── EXPERIENCE SECTION ─── */
+  #experiencia { background: transparent; }
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--border), var(--border), transparent);
+  }
+  .timeline-item {
+    position: relative; margin-bottom: 56px;
+    opacity: 0; transform: translateX(-24px);
+    transition: all 0.7s var(--transition);
+  }
+  .timeline-item.visible { opacity: 1; transform: translateX(0); }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -38px; top: 24px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent-gold);
+    box-shadow: 0 0 0 4px rgba(201,168,76,0.15), 0 0 0 8px rgba(201,168,76,0.05);
+    transition: box-shadow 0.3s;
+  }
+  .timeline-item:hover::before { box-shadow: 0 0 0 4px rgba(201,168,76,0.3), 0 0 0 8px rgba(201,168,76,0.1); }
+  .timeline-card {
+    background: var(--bg-card); border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg); padding: 28px 32px;
+    transition: all 0.35s;
+    position: relative; overflow: hidden;
+  }
+  .timeline-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; background: linear-gradient(to bottom, var(--accent-gold), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .timeline-card:hover { border-color: var(--border); box-shadow: 0 16px 48px rgba(0,0,0,0.3); transform: translateX(6px); }
+  .timeline-card:hover::before { opacity: 1; }
+  .timeline-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+  .timeline-role {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem; font-weight: 600; color: var(--text-primary);
+  }
+  .timeline-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; color: var(--accent-teal);
+    background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.2);
+    border-radius: 20px; padding: 4px 14px;
+    white-space: nowrap;
+  }
+  .timeline-company {
+    font-size: 0.88rem; color: var(--accent-gold);
+    margin-bottom: 14px; font-weight: 500;
+  }
+  .timeline-desc {
+    font-size: 0.92rem; line-height: 1.75; color: var(--text-muted);
+  }
+  .timeline-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .tag {
+    font-size: 0.72rem; letter-spacing: 0.5px;
+    color: var(--text-dim); background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-soft);
+    border-radius: 20px; padding: 4px 12px;
+    transition: all 0.2s;
+  }
+  .tag:hover { color: var(--text-muted); border-color: var(--border); }
+
+  /* ─── EDUCATION SECTION ─── */
+  #educacion { background: transparent; }
+  .edu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .edu-card {
+    background: var(--bg-card); border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg); padding: 32px;
+    position: relative; overflow: hidden;
+    transition: all 0.35s;
+    opacity: 0; transform: translateY(30px);
+    transition: all 0.6s var(--transition);
+  }
+  .edu-card.visible { opacity: 1; transform: translateY(0); }
+  .edu-card::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle at 100% 0%, rgba(201,168,76,0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .edu-card:hover {
+    border-color: var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    transform: translateY(-4px) !important;
+  }
+  .edu-degree-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 20px;
+  }
+  .edu-degree {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; font-weight: 600;
+    color: var(--text-primary); margin-bottom: 8px;
+  }
+  .edu-institution { font-size: 0.88rem; color: var(--accent-gold); margin-bottom: 6px; }
+  .edu-period { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 16px; }
+  .edu-desc { font-size: 0.88rem; line-height: 1.7; color: var(--text-muted); }
+
+  /* ─── CERTIFICATIONS ─── */
+  .certs-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+  .cert-item {
+    display: flex; align-items: center; gap: 20px;
+    background: var(--bg-card); border: 1px solid var(--border-soft);
+    border-radius: 14px; padding: 18px 24px;
+    transition: all 0.3s;
+    opacity: 0; transform: translateX(-20px);
+    transition: all 0.5s var(--transition);
+  }
+  .cert-item.visible { opacity: 1; transform: translateX(0); }
+  .cert-item:hover { border-color: var(--border); transform: translateX(8px) !important; }
+  .cert-icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(45,212,191,0.1));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .cert-info { flex: 1; }
+  .cert-name { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+  .cert-issuer { font-size: 0.8rem; color: var(--text-muted); }
+  .cert-year { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--accent-teal); }
+
+  /* ─── SKILLS SECTION ─── */
+  #habilidades { background: transparent; }
+  .skills-categories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .skill-category {
+    opacity: 0; transform: translateY(32px);
+    transition: all 0.7s var(--transition);
+  }
+  .skill-category.visible { opacity: 1; transform: translateY(0); }
+  .skill-cat-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; color: var(--accent-teal);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 24px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .skill-cat-icon { font-size: 1rem; }
+  .skill-list { display: flex; flex-direction: column; gap: 16px; }
+  .skill-item {}
+  .skill-meta {
+    display: flex; justify-content: space-between;
+    font-size: 0.85rem; color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .skill-meta span:last-child { color: var(--accent-gold); font-family: 'Space Mono', monospace; font-size: 0.75rem; }
+  .skill-bar { height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+  .skill-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-teal));
+    width: 0; transition: width 1.4s var(--transition);
+  }
+
+  /* ─── PORTFOLIO/PROYECTOS SECTION ─── */
+  #proyectos { background: transparent; }
+  .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .project-card {
+    background: var(--bg-card); border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg); overflow: hidden;
+    transition: all 0.4s;
+    opacity: 0; transform: translateY(30px);
+    transition: all 0.6s var(--transition);
+  }
+  .project-card.visible { opacity: 1; transform: translateY(0); }
+  .project-card:hover { transform: translateY(-8px) !important; box-shadow: 0 24px 64px rgba(0,0,0,0.5); border-color: var(--border); }
+  .project-thumb {
+    height: 180px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--bg-mid), var(--bg-card));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .project-thumb-emoji { font-size: 3.5rem; opacity: 0.4; }
+  .project-thumb-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(8,12,16,0.8));
+  }
+  .project-body { padding: 24px; }
+  .project-cat {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; color: var(--accent-teal);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .project-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; font-weight: 600; color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+  .project-desc { font-size: 0.84rem; line-height: 1.7; color: var(--text-muted); }
+  .project-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-soft);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .project-link {
+    font-size: 0.78rem; color: var(--accent-gold);
+    text-decoration: none; display: flex; align-items: center; gap: 6px;
+    transition: gap 0.3s;
+  }
+  .project-link:hover { gap: 10px; }
+
+  /* ─── CONTACT SECTION ─── */
+  #contacto {
+    background: transparent;
+    min-height: auto; padding-bottom: 120px;
+  }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-form {
+    background: var(--bg-card); border: 1px solid var(--border-soft);
+    border-radius: var(--radius-xl); padding: 40px;
+  }
+  .form-group { margin-bottom: 24px; }
+  .form-label {
+    display: block; font-size: 0.75rem; color: var(--text-dim);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 8px; font-family: 'Space Mono', monospace;
+  }
+  .form-input {
+    width: 100%; background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px; padding: 14px 18px;
+    color: var(--text-primary); font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.3s; outline: none;
+  }
+  .form-input:focus { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.03); box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
+  .form-input::placeholder { color: var(--text-dim); }
+  textarea.form-input { resize: vertical; min-height: 140px; }
+  .form-submit {
+    width: 100%; padding: 16px;
+    background: var(--accent-gold); color: #080c10;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    border: none; border-radius: 10px;
+    cursor: pointer; transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .form-submit:hover { box-shadow: 0 10px 32px rgba(201,168,76,0.4); }
+  .contact-info {}
+  .contact-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-style: italic;
+    color: var(--text-muted); line-height: 1.5;
+    margin-bottom: 40px;
+  }
+  .social-links { display: flex; flex-direction: column; gap: 16px; }
+  .social-link {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 24px; border: 1px solid var(--border-soft);
+    border-radius: 14px; text-decoration: none;
+    background: var(--bg-card); transition: all 0.3s;
+  }
+  .social-link:hover { border-color: var(--border); transform: translateX(8px); }
+  .social-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,0.05); display: flex;
+    align-items: center; justify-content: center; font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .social-info {}
+  .social-platform { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+  .social-handle { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--text-dim); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border-soft);
+    padding: 40px 80px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(8,12,16,0.6);
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; color: var(--text-dim);
+  }
+  .footer-copy span { color: var(--accent-gold); }
+  .footer-back-top {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; color: var(--text-dim);
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+    transition: color 0.3s;
+  }
+  .footer-back-top:hover { color: var(--accent-gold); }
+
+  /* ─── SCROLL INDICATOR ─── */
+  .scroll-indicator {
+    position: fixed; bottom: 40px; right: 48px; z-index: 50;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 1; transition: opacity 0.4s;
+  }
+  .scroll-indicator.hidden { opacity: 0; pointer-events: none; }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--accent-gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+  .scroll-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; color: var(--text-dim);
+    letter-spacing: 2px; writing-mode: vertical-rl;
+    text-transform: uppercase;
+  }
+
+  /* ─── PROGRESS BAR ─── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 2px; z-index: 200;
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-teal));
+    width: 0; transition: width 0.1s;
+  }
+
+  /* ─── SECTION NAVIGATION DOTS ─── */
+  .nav-dots {
+    position: fixed; right: 24px; top: 50%;
+    transform: translateY(-50%); z-index: 50;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .nav-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-dim); cursor: pointer;
+    transition: all 0.3s; position: relative;
+  }
+  .nav-dot.active { background: var(--accent-gold); transform: scale(1.5); }
+  .nav-dot::before {
+    content: attr(data-label);
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--accent-gold); white-space: nowrap;
+    opacity: 0; transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .nav-dot:hover::before { opacity: 1; }
+
+  /* ─── KEYFRAMES ─── */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeSlideRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ─── PARTICLE CANVAS ─── */
+  #particle-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none; opacity: 0.4;
+  }
+
+  /* ─── EDIT INDICATOR ─── */
+  .edit-note {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; color: var(--accent-teal);
+    opacity: 0.6; margin-top: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .edit-note::before {
+    content: '✎'; font-size: 0.8rem;
+  }
+
+  /* ─── SECTION TRANSITIONS ─── */
+  .fade-in-section {
+    opacity: 0; transform: translateY(40px);
+    transition: all 0.8s var(--transition);
+  }
+  .fade-in-section.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── MOBILE MENU BUTTON ─── */
+  .nav-toggle {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .nav-toggle span {
+    width: 24px; height: 2px; background: var(--text-primary);
+    border-radius: 2px; transition: all 0.3s;
+    display: block;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    section { padding: 100px 40px 60px; }
+    #hero { grid-template-columns: 1fr; gap: 40px; padding-top: 100px; }
+    .hero-visual { order: -1; }
+    .photo-frame { width: 280px; height: 320px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-left { position: static; }
+    .about-photo-small { max-width: 300px; aspect-ratio: 1/1; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .skills-categories { grid-template-columns: 1fr 1fr; }
+    .projects-grid { grid-template-columns: 1fr 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    footer { padding: 32px 40px; }
+    .nav-dots { display: none; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+    section { padding: 90px 24px 48px; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .skills-categories { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 24px; }
+    footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+    .scroll-indicator { display: none; }
+    #cursor-dot, #cursor-ring { display: none; }
+    body { cursor: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+<!-- BACKGROUND -->
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<canvas id="particle-canvas"></canvas>
+
+<!-- NAVIGATION DOTS -->
+<nav class="nav-dots" id="navDots">
+  <div class="nav-dot active" data-label="Inicio" data-section="hero"></div>
+  <div class="nav-dot" data-label="Sobre mí" data-section="sobre"></div>
+  <div class="nav-dot" data-label="Experiencia" data-section="experiencia"></div>
+  <div class="nav-dot" data-label="Educación" data-section="educacion"></div>
+  <div class="nav-dot" data-label="Habilidades" data-section="habilidades"></div>
+  <div class="nav-dot" data-label="Proyectos" data-section="proyectos"></div>
+  <div class="nav-dot" data-label="Contacto" data-section="contacto"></div>
+</nav>
+
+<!-- SCROLL INDICATOR -->
+<div class="scroll-indicator" id="scrollIndicator">
+  <span class="scroll-text">Scroll</span>
+  <div class="scroll-line"></div>
+</div>
+
+<!-- NAVIGATION -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo" id="navLogo">AP</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre mí</a></li>
+    <li><a href="#experiencia">Experiencia</a></li>
+    <li><a href="#educacion">Educación</a></li>
+    <li><a href="#habilidades">Habilidades</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<main>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="section-inner" style="grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;">
+      <div class="hero-content">
+        <div class="hero-eyebrow"><span></span> Perfil Profesional</div>
+        <h1 class="hero-name">
+          <span contenteditable="true" spellcheck="false" title="Haz clic para editar">Tu</span>
+          <strong contenteditable="true" spellcheck="false" title="Haz clic para editar">Nombre</strong>
+          <em contenteditable="true" spellcheck="false" title="Haz clic para editar">Completo</em>
+        </h1>
+        <p class="hero-role" contenteditable="true" spellcheck="false" title="Haz clic para editar">
+          Especialista en · Área Principal · Industria
+        </p>
+        <p class="hero-description" contenteditable="true" spellcheck="false">
+          Profesional apasionado con sólida trayectoria en el sector. Comprometido con la excelencia, la innovación y el impacto positivo en cada proyecto que emprendo. Aquí puedes presentar tu propuesta de valor única.
+        </p>
+        <div class="hero-cta">
+          <a href="#contacto" class="btn-primary">Contáctame</a>
+          <a href="#experiencia" class="btn-secondary">Ver trayectoria</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num" id="statYears">0<span>+</span></div>
+            <div class="stat-label">Años de exp.</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" id="statProjects">0<span>+</span></div>
+            <div class="stat-label">Proyectos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" id="statClients">0<span>+</span></div>
+            <div class="stat-label">Clientes</div>
+          </div>
+        </div>
+        <p class="edit-note">Haz clic en cualquier texto para editarlo</p>
+      </div>
+
+      <!-- PHOTO UPLOAD AREA -->
+      <div class="hero-visual">
+        <div class="photo-frame">
+          <div class="photo-border-outer"></div>
+          <div class="photo-accent-line"></div>
+          <div class="photo-accent-line-2"></div>
+          <div class="photo-container" id="photoContainer" onclick="document.getElementById('photo-input').click()">
+            <div class="photo-placeholder" id="photoPlaceholder">
+              <div class="photo-placeholder-icon">🖼</div>
+              <div style="font-size:0.85rem;color:var(--text-dim);text-align:center;padding:0 20px;">
+                Haz clic para subir tu foto profesional
+              </div>
+              <button class="photo-upload-btn">+ Subir foto</button>
+            </div>
+            <img src="" alt="Foto profesional" id="profilePhoto" style="display:none;">
+          </div>
+          <input type="file" id="photo-input" accept="image/*">
+          <div class="photo-badge">
+            <div class="badge-num" contenteditable="true">8</div>
+            <div class="badge-label">Años activo</div>
+          </div>
+          <div class="photo-badge-2">
+            <div class="badge-num" style="color:var(--accent-teal);" contenteditable="true">25</div>
+            <div class="badge-label">Proyectos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SOBRE MÍ ── -->
+  <section id="sobre">
+    <div class="section-inner">
+      <p class="section-label">01 — Quién soy</p>
+      <h2 class="section-title">Sobre <em>mí</em></h2>
+      <div class="divider"></div>
+      <div class="about-grid">
+        <div class="about-left fade-in-section">
+          <div class="about-photo-small">
+            <div class="about-photo-placeholder" id="aboutPhotoPlaceholder">🧑‍💼</div>
+            <img src="" alt="Foto" id="aboutPhoto" style="display:none;width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="contact-card">
+            <div class="contact-item">
+              <div class="contact-icon">📍</div>
+              <div class="contact-detail">
+                <div class="contact-type">Ubicación</div>
+                <div class="contact-value" contenteditable="true" data-edit>Ciudad, País</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">📧</div>
+              <div class="contact-detail">
+                <div class="contact-type">Email</div>
+                <div class="contact-value" contenteditable="true" data-edit>correo@email.com</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">📱</div>
+              <div class="contact-detail">
+                <div class="contact-type">Teléfono</div>
+                <div class="contact-value" contenteditable="true" data-edit>+51 000 000 000</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">🌐</div>
+              <div class="contact-detail">
+                <div class="contact-type">Portafolio / Web</div>
+                <div class="contact-value" contenteditable="true" data-edit>www.tupagina.com</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">🗣</div>
+              <div class="contact-detail">
+                <div class="contact-type">Idiomas</div>
+                <div class="contact-value" contenteditable="true" data-edit>Español · Inglés</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="about-right">
+          <div class="about-text fade-in-section">
+            <p contenteditable="true">
+              Soy un profesional con <strong>más de 8 años de experiencia</strong> en mi campo, especializado en crear soluciones que generan impacto real. Mi enfoque combina pensamiento estratégico con ejecución precisa, siempre orientado a resultados medibles y sostenibles.
+            </p>
+            <p contenteditable="true">
+              A lo largo de mi carrera he tenido la oportunidad de trabajar con organizaciones líderes, liderando equipos multidisciplinarios y gestionando proyectos de alto impacto. Mi metodología se basa en la <strong>escucha activa, el análisis profundo</strong> y la implementación de soluciones creativas adaptadas a cada contexto.
+            </p>
+            <div class="highlight-box">
+              <p contenteditable="true">"Mi misión es transformar desafíos complejos en oportunidades concretas de crecimiento, aportando valor desde el primer día."</p>
+            </div>
+            <p contenteditable="true">
+              Fuera del trabajo, soy apasionado por el aprendizaje continuo, las tecnologías emergentes y el desarrollo personal. Creo firmemente en la colaboración y en que los mejores resultados nacen de equipos diversos con metas compartidas.
+            </p>
+          </div>
+
+          <div style="margin-top:40px;">
+            <p class="section-label" style="position:static;opacity:1;transform:none;margin-bottom:16px;">Competencias clave</p>
+            <div class="skills-grid" id="keySkillsGrid">
+              <div class="skill-chip"><div class="skill-chip-dot dot-gold"></div><span contenteditable="true">Liderazgo</span></div>
+              <div class="skill-chip"><div class="skill-chip-dot dot-teal"></div><span contenteditable="true">Estrategia</span></div>
+              <div class="skill-chip"><div class="skill-chip-dot dot-rose"></div><span contenteditable="true">Innovación</span></div>
+              <div class="skill-chip"><div class="skill-chip-dot dot-gold"></div><span contenteditable="true">Gestión de equipos</span></div>
+              <div class="skill-chip"><div class="skill-chip-dot dot-teal"></div><span contenteditable="true">Análisis de datos</span></div>
+              <div class="skill-chip"><div class="skill-chip-dot dot-rose"></div><span contenteditable="true">Comunicación</span></div>
+              <div class="skill-chip"><div class="skill-chip-dot dot-gold"></div><span contenteditable="true">Resolución de problemas</span></div>
+              <div class="skill-chip"><div class="skill-chip-dot dot-teal"></div><span contenteditable="true">Planificación</span></div>
+              <div class="skill-chip"><div class="skill-chip-dot dot-rose"></div><span contenteditable="true">Negociación</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EXPERIENCIA ── -->
+  <section id="experiencia">
+    <div class="section-inner">
+      <p class="section-label">02 — Trayectoria profesional</p>
+      <h2 class="section-title">Mi <em>experiencia</em></h2>
+      <div class="divider"></div>
+      <div class="timeline" id="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <h3 class="timeline-role" contenteditable="true">Director / Cargo Principal</h3>
+              <span class="timeline-period" contenteditable="true">2022 — Presente</span>
+            </div>
+            <div class="timeline-company" contenteditable="true">🏢 Empresa Actual · Sector / Industria</div>
+            <p class="timeline-desc" contenteditable="true">Descripción de tus responsabilidades y logros más destacados. Lideraste un equipo de N personas, implementaste estrategias que resultaron en X% de crecimiento, y contribuiste al lanzamiento de proyectos clave para la organización. Añade métricas concretas que demuestren tu impacto.</p>
+            <div class="timeline-tags">
+              <span class="tag" contenteditable="true">Liderazgo</span>
+              <span class="tag" contenteditable="true">Estrategia</span>
+              <span class="tag" contenteditable="true">Gestión</span>
+              <span class="tag" contenteditable="true">Tecnología</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <h3 class="timeline-role" contenteditable="true">Gerente / Cargo Intermedio</h3>
+              <span class="timeline-period" contenteditable="true">2019 — 2022</span>
+            </div>
+            <div class="timeline-company" contenteditable="true">🏢 Empresa Anterior · Sector / Industria</div>
+            <p class="timeline-desc" contenteditable="true">Descripción de responsabilidades y logros clave en este cargo. Coordinaste proyectos interdepartamentales, optimizaste procesos internos y contribuiste al desarrollo de nuevas líneas de producto/servicio. Menciona los resultados más relevantes que obtuviste.</p>
+            <div class="timeline-tags">
+              <span class="tag" contenteditable="true">Gestión de proyectos</span>
+              <span class="tag" contenteditable="true">Optimización</span>
+              <span class="tag" contenteditable="true">Análisis</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <h3 class="timeline-role" contenteditable="true">Especialista / Cargo Técnico</h3>
+              <span class="timeline-period" contenteditable="true">2016 — 2019</span>
+            </div>
+            <div class="timeline-company" contenteditable="true">🏢 Empresa · Sector</div>
+            <p class="timeline-desc" contenteditable="true">Descripción de tu rol como especialista. Desarrollaste competencias clave en tu área, trabajaste en proyectos de mediana y alta complejidad, y estableciste relaciones sólidas con clientes y socios estratégicos. Aquí puedes detallar los aprendizajes más valiosos.</p>
+            <div class="timeline-tags">
+              <span class="tag" contenteditable="true">Especialización</span>
+              <span class="tag" contenteditable="true">Implementación</span>
+              <span class="tag" contenteditable="true">Clientes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <h3 class="timeline-role" contenteditable="true">Analista / Cargo Inicial</h3>
+              <span class="timeline-period" contenteditable="true">2014 — 2016</span>
+            </div>
+            <div class="timeline-company" contenteditable="true">🏢 Primera Empresa · Sector</div>
+            <p class="timeline-desc" contenteditable="true">Inicio de tu carrera profesional. Describí cómo diste tus primeros pasos en el sector, qué aprendiste, cuáles fueron tus primeras responsabilidades y cómo contribuiste al equipo desde el comienzo. Esta experiencia marcó las bases de tu desarrollo profesional.</p>
+            <div class="timeline-tags">
+              <span class="tag" contenteditable="true">Análisis</span>
+              <span class="tag" contenteditable="true">Aprendizaje</span>
+              <span class="tag" contenteditable="true">Trabajo en equipo</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EDUCACIÓN ── -->
+  <section id="educacion">
+    <div class="section-inner">
+      <p class="section-label">03 — Formación académica</p>
+      <h2 class="section-title">Estudios y <em>certificaciones</em></h2>
+      <div class="divider"></div>
+
+      <div class="edu-grid" id="eduGrid">
+        <div class="edu-card">
+          <div class="edu-degree-icon">🎓</div>
+          <div class="edu-degree" contenteditable="true">Maestría en tu área</div>
+          <div class="edu-institution" contenteditable="true">Universidad o Institución</div>
+          <div class="edu-period" contenteditable="true">2018 — 2020</div>
+          <p class="edu-desc" contenteditable="true">Especialización en los aspectos más avanzados de tu disciplina. Tesis sobre tema relevante, mención honorífica. Descripción breve de lo que estudiaste y el enfoque de tu posgrado.</p>
+        </div>
+
+        <div class="edu-card">
+          <div class="edu-degree-icon">📚</div>
+          <div class="edu-degree" contenteditable="true">Licenciatura en tu carrera</div>
+          <div class="edu-institution" contenteditable="true">Universidad Nacional</div>
+          <div class="edu-period" contenteditable="true">2010 — 2015</div>
+          <p class="edu-desc" contenteditable="true">Formación base en tu disciplina principal. Graduado con honores / Promedio destacado. Participación en proyectos de investigación, actividades extracurriculares y organizaciones estudiantiles.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:60px;">
+        <p class="section-label" style="position:static;opacity:1;transform:none;margin-bottom:32px;">
+          Certificaciones y cursos destacados
+        </p>
+        <div class="certs-list" id="certsList">
+          <div class="cert-item">
+            <div class="cert-icon">🏅</div>
+            <div class="cert-info">
+              <div class="cert-name" contenteditable="true">Certificación Profesional Internacional</div>
+              <div class="cert-issuer" contenteditable="true">Organismo certificador · Institución emisora</div>
+            </div>
+            <div class="cert-year" contenteditable="true">2023</div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">📜</div>
+            <div class="cert-info">
+              <div class="cert-name" contenteditable="true">Diplomado en Gestión Estratégica</div>
+              <div class="cert-issuer" contenteditable="true">Universidad / Plataforma online</div>
+            </div>
+            <div class="cert-year" contenteditable="true">2022</div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">🎯</div>
+            <div class="cert-info">
+              <div class="cert-name" contenteditable="true">Curso Avanzado en tu Especialidad</div>
+              <div class="cert-issuer" contenteditable="true">Institución formadora</div>
+            </div>
+            <div class="cert-year" contenteditable="true">2021</div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">💡</div>
+            <div class="cert-info">
+              <div class="cert-name" contenteditable="true">Programa de Liderazgo Ejecutivo</div>
+              <div class="cert-issuer" contenteditable="true">Business School reconocida</div>
+            </div>
+            <div class="cert-year" contenteditable="true">2020</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HABILIDADES ── -->
+  <section id="habilidades">
+    <div class="section-inner">
+      <p class="section-label">04 — Competencias</p>
+      <h2 class="section-title">Habilidades y <em>dominio</em></h2>
+      <div class="divider"></div>
+      <div class="skills-categories">
+
+        <div class="skill-category">
+          <div class="skill-cat-title">
+            <span class="skill-cat-icon">⚡</span> Técnicas
+          </div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Habilidad técnica 1</span><span>95%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Habilidad técnica 2</span><span>88%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Habilidad técnica 3</span><span>82%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Habilidad técnica 4</span><span>76%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="76"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-category">
+          <div class="skill-cat-title">
+            <span class="skill-cat-icon">🎯</span> Gestión
+          </div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Liderazgo de equipos</span><span>92%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Gestión de proyectos</span><span>90%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Planificación estratégica</span><span>85%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Toma de decisiones</span><span>88%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-category">
+          <div class="skill-cat-title">
+            <span class="skill-cat-icon">🌟</span> Soft Skills
+          </div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Comunicación efectiva</span><span>96%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="96"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Trabajo en equipo</span><span>94%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="94"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Pensamiento crítico</span><span>89%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="89"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-meta"><span contenteditable="true">Adaptabilidad</span><span>93%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROYECTOS ── -->
+  <section id="proyectos">
+    <div class="section-inner">
+      <p class="section-label">05 — Portafolio</p>
+      <h2 class="section-title">Proyectos <em>destacados</em></h2>
+      <div class="divider"></div>
+      <div class="projects-grid" id="projectsGrid">
+
+        <div class="project-card">
+          <div class="project-thumb" style="background:linear-gradient(135deg,#1a2035,#0e1420);">
+            <div class="project-thumb-emoji">🚀</div>
+            <div class="project-thumb-overlay"></div>
+          </div>
+          <div class="project-body">
+            <div class="project-cat" contenteditable="true">Categoría · Año</div>
+            <h3 class="project-title" contenteditable="true">Nombre del Proyecto Principal</h3>
+            <p class="project-desc" contenteditable="true">Descripción breve del proyecto, su objetivo, tu rol y el impacto generado. Incluye las tecnologías o metodologías aplicadas.</p>
+          </div>
+          <div class="project-footer">
+            <div class="timeline-tags" style="margin:0;">
+              <span class="tag" contenteditable="true">Estrategia</span>
+              <span class="tag" contenteditable="true">Innovación</span>
+            </div>
+            <a href="#" class="project-link">Ver más →</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-thumb" style="background:linear-gradient(135deg,#0d2030,#0e1420);">
+            <div class="project-thumb-emoji">📊</div>
+            <div class="project-thumb-overlay"></div>
+          </div>
+          <div class="project-body">
+            <div class="project-cat" contenteditable="true">Análisis · 2023</div>
+            <h3 class="project-title" contenteditable="true">Proyecto de Análisis e Impacto</h3>
+            <p class="project-desc" contenteditable="true">Descripción del proyecto, metodología empleada y resultados obtenidos. Menciona el alcance y los stakeholders involucrados.</p>
+          </div>
+          <div class="project-footer">
+            <div class="timeline-tags" style="margin:0;">
+              <span class="tag" contenteditable="true">Datos</span>
+              <span class="tag" contenteditable="true">Gestión</span>
+            </div>
+            <a href="#" class="project-link">Ver más →</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-thumb" style="background:linear-gradient(135deg,#1a0d20,#0e1420);">
+            <div class="project-thumb-emoji">💡</div>
+            <div class="project-thumb-overlay"></div>
+          </div>
+          <div class="project-body">
+            <div class="project-cat" contenteditable="true">Innovación · 2022</div>
+            <h3 class="project-title" contenteditable="true">Iniciativa de Transformación</h3>
+            <p class="project-desc" contenteditable="true">Descripción de cómo lideraste o participaste en un proyecto de cambio o mejora significativa, con impacto medible en la organización o cliente.</p>
+          </div>
+          <div class="project-footer">
+            <div class="timeline-tags" style="margin:0;">
+              <span class="tag" contenteditable="true">Liderazgo</span>
+              <span class="tag" contenteditable="true">Cambio</span>
+            </div>
+            <a href="#" class="project-link">Ver más →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACTO ── -->
+  <section id="contacto">
+    <div class="section-inner">
+      <p class="section-label">06 — Conectemos</p>
+      <h2 class="section-title">Hablemos de tu <em>próximo proyecto</em></h2>
+      <div class="divider"></div>
+      <div class="contact-grid">
+
+        <div class="contact-form fade-in-section">
+          <div class="form-group">
+            <label class="form-label">Tu nombre</label>
+            <input type="text" class="form-input" placeholder="Nombre completo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Correo electrónico</label>
+            <input type="email" class="form-input" placeholder="correo@ejemplo.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Asunto</label>
+            <input type="text" class="form-input" placeholder="¿De qué quieres hablar?">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mensaje</label>
+            <textarea class="form-input" placeholder="Cuéntame sobre tu proyecto o consulta..."></textarea>
+          </div>
+          <button class="form-submit" onclick="handleFormSubmit(this)">Enviar mensaje</button>
+        </div>
+
+        <div class="contact-info fade-in-section">
+          <p class="contact-tagline" contenteditable="true">
+            "Estoy siempre abierto a nuevas oportunidades, colaboraciones y proyectos desafiantes."
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-link">
+              <div class="social-icon">💼</div>
+              <div class="social-info">
+                <div class="social-platform">LinkedIn</div>
+                <div class="social-handle" contenteditable="true">/in/tu-perfil</div>
+              </div>
+            </a>
+            <a href="#" class="social-link">
+              <div class="social-icon">🐱</div>
+              <div class="social-info">
+                <div class="social-platform">GitHub</div>
+                <div class="social-handle" contenteditable="true">@tu-usuario</div>
+              </div>
+            </a>
+            <a href="#" class="social-link">
+              <div class="social-icon">🐦</div>
+              <div class="social-info">
+                <div class="social-platform">Twitter / X</div>
+                <div class="social-handle" contenteditable="true">@tu-handle</div>
+              </div>
+            </a>
+            <a href="#" class="social-link">
+              <div class="social-icon">📸</div>
+              <div class="social-info">
+                <div class="social-platform">Instagram</div>
+                <div class="social-handle" contenteditable="true">@tu-cuenta</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-copy">
+    © <span id="footerYear"></span> · <span contenteditable="true">Tu Nombre</span>
+    · Diseñado con <span style="color:var(--accent-rose)">♥</span>
+  </div>
+  <a href="#hero" class="footer-back-top">↑ Volver arriba</a>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── YEAR ── */
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+  /* ── CUSTOM CURSOR ── */
+  var dot  = document.getElementById('cursor-dot');
+  var ring = document.getElementById('cursor-ring');
+  var mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', function (e) {
+    mouseX = e.clientX; mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top  = mouseY + 'px';
+  });
+
+  (function animateCursor() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top  = ringY + 'px';
+    requestAnimationFrame(animateCursor);
+  })();
+
+  document.querySelectorAll('a, button, [contenteditable]').forEach(function (el) {
+    el.addEventListener('mouseenter', function () {
+      ring.style.width = '56px'; ring.style.height = '56px';
+      ring.style.borderColor = 'var(--accent-teal)';
+    });
+    el.addEventListener('mouseleave', function () {
+      ring.style.width = '36px'; ring.style.height = '36px';
+      ring.style.borderColor = 'rgba(201,168,76,0.5)';
+    });
+  });
+
+  /* ── PROGRESS BAR ── */
+  var progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', function () {
+    var s = document.documentElement;
+    var pct = (s.scrollTop / (s.scrollHeight - s.clientHeight)) * 100;
+    progressBar.style.width = pct + '%';
+  });
+
+  /* ── NAV SCROLL ── */
+  var nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 40) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  });
+
+  /* ── SCROLL INDICATOR ── */
+  var scrollIndicator = document.getElementById('scrollIndicator');
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 200) {
+      scrollIndicator.classList.add('hidden');
+    } else {
+      scrollIndicator.classList.remove('hidden');
+    }
+  });
+
+  /* ── NAV DOTS ── */
+  var sections    = ['hero','sobre','experiencia','educacion','habilidades','proyectos','contacto'];
+  var dots        = document.querySelectorAll('.nav-dot');
+  var navLogoEl   = document.getElementById('navLogo');
+
+  function updateActiveDot() {
+    var scrollY = window.scrollY + window.innerHeight / 2;
+    var activeIdx = 0;
+    sections.forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (el.offsetTop <= scrollY) activeIdx = i;
+    });
+    dots.forEach(function (d, i) {
+      d.classList.toggle('active', i === activeIdx);
+    });
+    /* update nav logo initials from contenteditable name */
+    var nameParts = document.querySelector('.hero-name strong');
+    if (nameParts && nameParts.textContent.trim()) {
+      var words = nameParts.textContent.trim().split(' ');
+      navLogoEl.textContent = words.map(function(w){ return w[0] || ''; }).join('').substring(0,2).toUpperCase() || 'AP';
+    }
+  }
+  window.addEventListener('scroll', updateActiveDot);
+
+  dots.forEach(function (dot, i) {
+    dot.addEventListener('click', function () {
+      var el = document.getElementById(sections[i]);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  /* ── INTERSECTION OBSERVER ── */
+  var observerOptions = { threshold: 0.12, rootMargin: '0px 0px -60px 0px' };
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll(
+    '.section-label, .section-title, .divider, .fade-in-section, ' +
+    '.timeline-item, .edu-card, .cert-item, .skill-category, ' +
+    '.project-card, .skill-chip, .about-text'
+  ).forEach(function (el) { observer.observe(el); });
+
+  /* Stagger skill chips */
+  document.querySelectorAll('.skill-chip').forEach(function (el, i) {
+    el.style.transitionDelay = (i * 0.06) + 's';
+  });
+
+  /* ── SKILL BARS ON SCROLL ── */
+  var barsAnimated = false;
+  var barObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting && !barsAnimated) {
+        barsAnimated = true;
+        document.querySelectorAll('.skill-fill').forEach(function (fill) {
+          var w = fill.getAttribute('data-width');
+          setTimeout(function () {
+            fill.style.width = w + '%';
+          }, 200);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  var habilidadesSection = document.getElementById('habilidades');
+  if (habilidadesSection) barObserver.observe(habilidadesSection);
+
+  /* ── COUNTER ANIMATION ── */
+  function animateCounter(el, target, suffix) {
+    var start = 0;
+    var dur = 1600;
+    var startTime = null;
+    suffix = suffix || '';
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / dur, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.querySelector('span').textContent = suffix;
+      el.firstChild.nodeValue = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  var heroEl = document.getElementById('hero');
+  var countersStarted = false;
+  var counterObserver = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting && !countersStarted) {
+      countersStarted = true;
+      setTimeout(function () {
+        animateCounter(document.getElementById('statYears'), 8, '+');
+        animateCounter(document.getElementById('statProjects'), 25, '+');
+        animateCounter(document.getElementById('statClients'), 40, '+');
+      }, 1000);
+    }
+  }, { threshold: 0.5 });
+  if (heroEl) counterObserver.observe(heroEl);
+
+  /* ── PHOTO UPLOAD ── */
+  var photoInput = document.getElementById('photo-input');
+  photoInput.addEventListener('change', function (e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      var src = ev.target.result;
+      /* Main hero photo */
+      var img = document.getElementById('profilePhoto');
+      var placeholder = document.getElementById('photoPlaceholder');
+      img.src = src;
+      img.style.display = 'block';
+      placeholder.style.display = 'none';
+      /* About section small photo */
+      var aImg = document.getElementById('aboutPhoto');
+      var aPlaceholder = document.getElementById('aboutPhotoPlaceholder');
+      aImg.src = src;
+      aImg.style.display = 'block';
+      aPlaceholder.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  /* Also trigger upload when clicking the photo area */
+  document.getElementById('photoContainer').addEventListener('click', function () {
+    document.getElementById('photo-input').click();
+  });
+
+  /* ── FORM SUBMIT ── */
+  window.handleFormSubmit = function (btn) {
+    btn.textContent = '✔ Mensaje enviado';
+    btn.style.background = 'var(--accent-teal)';
+    btn.style.color = '#080c10';
+    setTimeout(function () {
+      btn.textContent = 'Enviar mensaje';
+      btn.style.background = 'var(--accent-gold)';
+      btn.style.color = '#080c10';
+    }, 3000);
+  };
+
+  /* ── PARTICLE CANVAS ── */
+  var canvas = document.getElementById('particle-canvas');
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var W = 0, H = 0;
+
+  function resizeCanvas() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  var PARTICLE_COUNT = 55;
+  function Particle() {
+    this.x  = Math.random() * W;
+    this.y  = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.r  = Math.random() * 1.5 + 0.4;
+    this.alpha = Math.random() * 0.5 + 0.1;
+    this.color = Math.random() > 0.5 ? '201,168,76' : '45,212,191';
+  }
+  Particle.prototype.update = function () {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0)  this.x = W;
+    if (this.x > W)  this.x = 0;
+    if (this.y < 0)  this.y = H;
+    if (this.y > H)  this.y = 0;
+  };
+  Particle.prototype.draw = function () {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + this.color + ',' + this.alpha + ')';
+    ctx.fill();
+  };
+
+  for (var i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+  function connectParticles() {
+    for (var a = 0; a < particles.length; a++) {
+      for (var b = a + 1; b < particles.length; b++) {
+        var dx = particles[a].x - particles[b].x;
+        var dy = particles[a].y - particles[b].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110) {
+          ctx.beginPath();
+          ctx.strokeStyle = 'rgba(201,168,76,' + (0.06 * (1 - dist / 110)) + ')';
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[a].x, particles[a].y);
+          ctx.lineTo(particles[b].x, particles[b].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(function (p) { p.update(); p.draw(); });
+    connectParticles();
+    requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+
+  /* ── NAV TOGGLE MOBILE ── */
+  document.getElementById('navToggle').addEventListener('click', function () {
+    var links = document.querySelector('.nav-links');
+    if (links.style.display === 'flex') {
+      links.style.display = 'none';
+    } else {
+      links.style.cssText = 'display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:rgba(8,12,16,0.97);padding:20px 24px;gap:16px;border-bottom:1px solid rgba(255,255,255,0.06)';
+    }
+  });
+
+  /* ── SMOOTH SECTION REVEAL ON LOAD ── */
+  window.addEventListener('load', function () {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s';
+    setTimeout(function () { document.body.style.opacity = '1'; }, 50);
+  });
+
+})();
+</script>
+</body>
+</html>
