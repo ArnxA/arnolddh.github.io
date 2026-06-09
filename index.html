@@ -60,15 +60,30 @@
 
     /* ── HERO ── */
     header {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: end;
-      gap: 2.5rem;
-      padding: 5rem 0 3.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.8rem;
+      padding: 4rem 0 3.5rem;
       border-bottom: 1px solid var(--rule);
     }
 
-    .hero-text {}
+    /* Foto arriba */
+    .photo-wrap {
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0;
+    }
+    .photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+
+    /* Bloque de texto: ocupa todo el ancho */
+    .hero-text { width: 100%; }
 
     .eyebrow {
       font-family: var(--mono);
@@ -82,48 +97,20 @@
     h1 {
       font-family: var(--serif);
       font-weight: 600;
-      font-size: clamp(2.2rem, 6vw, 3.4rem);
-      line-height: 1.12;
+      /* Escala automática: cabe cualquier nombre largo */
+      font-size: clamp(2rem, 7.5vw, 3.6rem);
+      line-height: 1.08;
       letter-spacing: -0.02em;
       margin-bottom: 1rem;
+      /* Evita saltos de línea forzados por el navegador */
+      word-break: break-word;
     }
 
     .tagline {
       font-size: 1.05rem;
       color: var(--mid);
-      max-width: 36ch;
+      max-width: 52ch;
       font-style: italic;
-    }
-
-    /* ── FOTO ── */
-    .photo-wrap {
-      width: 160px;
-      height: 160px;
-      flex-shrink: 0;
-    }
-    .photo-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top;
-      /* Sin borde ni filtro: blanco y negro puro */
-      filter: grayscale(100%);
-      display: block;
-    }
-    /* Placeholder si no hay foto */
-    .photo-placeholder {
-      width: 160px;
-      height: 160px;
-      border: 1px solid var(--rule);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--mid);
-      text-align: center;
-      line-height: 1.5;
-      letter-spacing: 0.08em;
     }
 
     /* ── SECCIONES ── */
@@ -152,7 +139,7 @@
     }
     .about-text p:last-child { margin-bottom: 0; }
 
-    /* ── EXPERIENCIA ── */
+    /* ── EXPERIENCIA ── *
     .exp-list { list-style: none; display: flex; flex-direction: column; gap: 2.5rem; }
 
     .exp-item {}
@@ -210,7 +197,7 @@
       margin-top: 0.15rem;
     }
 
-    /* ── PROYECTOS ── */
+    /* ── PROYECTOS ── *
     .proj-list { list-style: none; display: flex; flex-direction: column; gap: 2rem; }
 
     .proj-title {
@@ -239,8 +226,6 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1.5rem 2rem;
     }
-
-    .contact-item {}
 
     .contact-key {
       font-family: var(--mono);
@@ -272,17 +257,8 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 560px) {
-      header {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        padding-top: 3rem;
-      }
-      header { gap: 2rem; }
-      .photo-wrap, .photo-placeholder {
-        width: 120px;
-        height: 120px;
-        order: -1;
-      }
+      header { padding-top: 3rem; gap: 1.4rem; }
+      .photo-wrap, .photo-placeholder { width: 110px; height: 110px; }
       nav { justify-content: flex-start; flex-wrap: wrap; gap: 1.2rem; }
     }
   </style>
@@ -296,9 +272,7 @@
          ════════════════════════════════════════════════ -->
     <nav>
       <a href="#sobre-mi">Sobre mí</a>
-      <a href="#experiencia">Experiencia</a>
       <a href="#formacion">Formación</a>
-      <a href="#proyectos">Proyectos</a>
       <a href="#contacto">Contacto</a>
     </nav>
 
@@ -309,10 +283,10 @@
       <div class="hero-text">
 
         <!-- ── Tu cargo o especialidad corta ── -->
-        <p class="eyebrow">Inteligencia Artifical, Universidad Nacional Mayor de San Marcos, Lima, Perú</p>
+        <p class="eyebrow">Inteligencia Artifical · Universidad Nacional Mayor de San Marcos, Lima, Perú</p>
 
         <!-- ── Tu nombre completo ── -->
-        <h1>De Paz Huerta Arnold Amiel<br>Completo</h1>
+        <h1>De Paz Huerta Arnold Amiel</h1>
 
         <!-- ── Una frase que te define ── -->
         <p class="tagline">
@@ -323,13 +297,12 @@
       </div>
 
       <!-- ══════════════════════════════════════════
-           FOTO     
-    -->
-      <! 
+           FOTO
+           ══════════════════════════════════════════ -->
       <div class="photo-wrap">
         <img src="Fotoperfil.jpg" alt="Foto de Tu Nombre" />
       </div>
-      >
+      
 
     </header>
 
@@ -343,7 +316,7 @@
 
         <!-- Escribe dos o tres párrafos presentándote -->
         <p>
-           Estudiante de la carrera de Inteligencia Artificial en la Universidad Nacional Mayor de San Marcos. Interesado en el diseño de modelos algoritmicos que permitan a las máquinas aprender, automatizar procesos y tomar decisiones. Busco cambiar la forma en la que se ve y considera a la tecnología emergente,  los modelos computacionales de IA.
+          Estudiante de la carrera de Inteligencia Artificial en la Universidad Nacional Mayor de San Marcos. Interesado en el diseño de modelos algoritmicos que permitan a las máquinas aprender, automatizar procesos y tomar decisiones. Busco cambiar la forma en la que se ve y considera a la tecnología emergente,  los modelos computacionales de IA.
         </p>
         <p>
           Una de mis mayores aspiraciones es crear una arquitectura, basada en LLMs, Machine Learning,..., que permita acceder al usuario a una nueva interfaz realista, en el que el intercambio de información se sienta real.
@@ -354,7 +327,7 @@
 
 
     <!-- ════════════════════════════════════════════════
-         EXPERIENCIA 
+         EXPERIENCIA LABORAL
          Duplica un bloque <li> para cada puesto.
          ════════════════════════════════════════════════ 
     <section id="experiencia">
@@ -387,7 +360,7 @@
 
       </ul>
     </section>
-  --> 
+  -->
 
     <!-- ════════════════════════════════════════════════
          FORMACIÓN ACADÉMICA
@@ -399,7 +372,7 @@
         <li>
           <p class="edu-degree">Estudiante de pregrado</p>
           <p class="edu-institution">Universidad Nacional Mayor de San Marcos</p>
-          <p class="edu-year">2026 — 2031(...)</p>
+          <p class="edu-year">2026 — 2031</p>
         </li>
 
         <li>
